@@ -32,10 +32,10 @@ _amino_acid_sources: list[_AminoAcidSource] = [
     {"name": "Tryptophan", "char": "W"},
     {"name": "Tyrosine", "char": "Y"},
     {"name": "Valine", "char": "V"},
-    {'name': "Selenocysteine", "char": "U"},
-    {'name': "Unknown", "char": "X"},
-    {'name': "Ambiguous", "char": "B"},
-    {'name': "Ambiguous", "char": "Z"},
+    {"name": "Selenocysteine", "char": "U"},
+    {"name": "Unknown", "char": "X"},
+    {"name": "Ambiguous", "char": "B"},
+    {"name": "Ambiguous", "char": "Z"},
 ]
 
 

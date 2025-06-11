@@ -1,18 +1,13 @@
-import os
-
-from src.lib.config.dir import Dir
 from src.modules.data_pipeline.aggregator import Aggregator
 from src.modules.data_pipeline.data_pipeline import DataPipeline
 from src.modules.data_pipeline.initializer import Initializer
 from src.modules.data_pipeline.sinusoidal_positional_encoder import (
     SinusoidalPositionalEncoder,
-    BidirectionalSinusoidalPositionalEncoder,
 )
 from src.modules.dataloader.dataloader import Dataloader, DataloaderState
 from src.modules.model.architecture import Architecture
 from src.modules.model.configurable_model import ConfigurableModel
 from src.modules.protein.protein_list import ProteinList
-from src.modules.train.train_result import TrainResultLoader
 from src.modules.train.trainer import Trainer
 
 protein_list = ProteinList.from_hdf5("result/EXT0001q/plasma_lumos_1h/data.h5")

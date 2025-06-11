@@ -87,8 +87,8 @@ class Visualizer:
         # figure.subplots_adjust(left=0.1, right=0.75, bottom=0.2, top=0.85)
         axes = figure.add_subplot(1, 1, 1)
 
-        label = self._train_result["max_accuracy_result"]['evaluate'][prop_name]["label"]
-        output = self._train_result["max_accuracy_result"]['evaluate'][prop_name]["output"]
+        label = self._train_result["max_accuracy_result"]["evaluate"][prop_name]["label"]
+        output = self._train_result["max_accuracy_result"]["evaluate"][prop_name]["output"]
 
         xy_min = min(label + output)
         xy_max = max(label + output)

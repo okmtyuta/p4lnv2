@@ -19,7 +19,7 @@ class Analyzer:
     def _get_rmses(self, prop_name: ProteinProp):
         rmses: list[float] = []
         for result in self._train_results:
-            rmse = result["max_accuracy_result"][prop_name]['root_mean_squared_error']
+            rmse = result["max_accuracy_result"][prop_name]["root_mean_squared_error"]
             rmses.append(rmse)
 
         return rmses
@@ -41,7 +41,7 @@ class Analyzer:
         std = statistics.stdev(pearsonrs)
 
         return std
-    
+
     def get_rmse_median(self, prop_name: ProteinProp):
         rmses = self._get_rmses(prop_name)
         median = statistics.median(rmses)

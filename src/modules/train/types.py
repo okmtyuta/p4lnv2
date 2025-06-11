@@ -1,12 +1,7 @@
 from typing import Literal, TypedDict
 
-import numpy as np
-import numpy.typing as npt
-import torch
-
 from src.modules.protein.protein import ProteinProps
 from src.modules.protein.protein_list import ProteinProp
-
 
 TrainRecorderResultKey = Literal["train", "evaluate", "validate"]
 

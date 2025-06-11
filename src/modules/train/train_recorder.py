@@ -1,7 +1,6 @@
-from typing import Literal, Optional
+from typing import Optional
 
 from src.lib.config.Env import Env
-from src.modules.protein.protein_list import ProteinProp
 from src.modules.train.types import (
     EpochResult,
     TrainRecorderMaxAccuracyResult,

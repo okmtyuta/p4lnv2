@@ -11,7 +11,7 @@ language = ESM2Language()
 extractor = Extractor(language=language)
 
 # read proteins from csv
-dataset_csv_path = os.path.join(Dir.root_dir, "data",'busse', "data.csv")
+dataset_csv_path = os.path.join(Dir.root_dir, "data", "busse", "data.csv")
 protein_list = ProteinList.from_csv(path=dataset_csv_path)
 
 # execute extraction

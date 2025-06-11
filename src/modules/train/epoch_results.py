@@ -10,14 +10,14 @@ def save_epoch_results_as_hdf5(path: str, epoch_results: list[EpochResult]):
         print("result saving...")
 
         for epoch_result in tqdm(epoch_results):
-            epoch_group = f.create_group(f'result/{epoch_result["epoch"]}')
+            epoch_group = f.create_group(f"result/{epoch_result['epoch']}")
             epoch_group_attrs = epoch_group.attrs
             epoch_group_attrs["epoch"] = epoch_result["epoch"]
 
             for result in epoch_result["results"]:
-                prop_group = f.create_group(f'result/{epoch_result["epoch"]}/{result['prop_name']}')
-                f.create_dataset(f'result/{epoch_result["epoch"]}/{result['prop_name']}/output', data=result["output"])
-                f.create_dataset(f'result/{epoch_result["epoch"]}/{result['prop_name']}/label', data=result["label"])
+                prop_group = f.create_group(f"result/{epoch_result['epoch']}/{result['prop_name']}")
+                f.create_dataset(f"result/{epoch_result['epoch']}/{result['prop_name']}/output", data=result["output"])
+                f.create_dataset(f"result/{epoch_result['epoch']}/{result['prop_name']}/label", data=result["label"])
                 prop_group_attrs = prop_group.attrs
                 prop_group_attrs["pearsonr"] = result["pearsonr"]
                 prop_group_attrs["mean_squared_error"] = result["mean_squared_error"]

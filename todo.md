@@ -1,0 +1,28 @@
+- [ ] RT予測の実験をやり直す
+  - [ ] arabidopsis
+  - [ ] atlantis_silica
+  - [ ] dia_hf
+  - [ ] hela_deeprt
+  - [ ] hela_hf
+  - [ ] hela_lumos_1h
+  - [ ] hela_lumos_2h
+  - [ ] luna_hilic
+  - [ ] luna_silica
+  - [ ] pancreas
+  - [ ] plasma_lumos_1h
+  - [ ] plasma_lumos_2h
+  - [ ] proteometools
+  - [ ] proteometools_ptm
+  - [ ] scx
+  - [ ] swath_library
+  - [ ] xbridge
+  - [ ] yeast_1h
+  - [ ] yeast_2h
+  - [ ] yeast_deeprt
+  - [ ] ishihama
+- [ ] RTとCCSの同時予測の実験をやり直す
+- [ ] Pearsonの相関係数以外の尺度でも評価する（MSE，RMSE，SHAP）
+- [ ] 元データの分析を行う
+- [ ] プロテオーム学会のポスター発表の準備をする
+- [ ] タンパク質の寿命予測の実験をやり直す
+  - [ ] AlphaFoldの情報を追加する

@@ -1,12 +1,8 @@
-from typing import TypedDict
+import numpy as np
 import torch
 from scipy import stats
-import numpy.typing as npt
-import numpy as np
 
 from src.modules.train.types import Criteria
-
-
 
 
 class Criterion:
