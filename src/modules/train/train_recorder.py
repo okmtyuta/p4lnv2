@@ -1,16 +1,18 @@
 from typing import Literal, Optional
 
+from src.lib.config.Env import Env
 from src.modules.protein.protein_list import ProteinProp
-from src.modules.train.types import EpochResult
-
-TrainRecorderResultKind = Literal["train", "evaluate", "validate"]
-TrainRecorderResult = dict[TrainRecorderResultKind, dict[ProteinProp, list[EpochResult]]]
+from src.modules.train.types import (
+    EpochResult,
+    TrainRecorderMaxAccuracyResult,
+    TrainRecorderResult,
+    TrainRecorderResultKey,
+)
 
 
 class TrainRecorder:
     def __init__(self):
         self._current_epoch = 1
-        self._max_accuracy_result: Optional[dict[ProteinProp, EpochResult]] = None
         self._max_accuracy_epoch: Optional[int] = None
 
         self._result: TrainRecorderResult = {
@@ -18,10 +20,23 @@ class TrainRecorder:
             "evaluate": {},
             "validate": {},
         }
+        self._max_accuracy_result: TrainRecorderMaxAccuracyResult = {
+            "train": {},
+            "evaluate": {},
+            "validate": {},
+        }
 
-        self._train_result: dict[ProteinProp, list[EpochResult]] = {}
-        self._evaluate_result: dict[ProteinProp, list[EpochResult]] = {}
-        self._validate_result: dict[ProteinProp, list[EpochResult]] = {}
+    @property
+    def train_result(self):
+        return self._result["train"]
+
+    @property
+    def validate_result(self):
+        return self._result["validate"]
+
+    @property
+    def evaluate_result(self):
+        return self._result["evaluate"]
 
     @property
     def current_epoch(self):
@@ -29,21 +44,25 @@ class TrainRecorder:
 
     @property
     def max_accuracy_result(self):
-        if self._max_accuracy_result is None:
-            raise Exception
         return self._max_accuracy_result
 
     @property
     def max_accuracy_epoch(self):
         return self._max_accuracy_epoch
 
-    @property
-    def train_result(self):
-        return self._train_result
+    def _set_max_accuracy_result(self, key: TrainRecorderResultKey, epoch_results: list[EpochResult]):
+        for result in epoch_results:
+            prop_name = result["prop_name"]
+            self._max_accuracy_result[key][prop_name] = result
 
-    @property
-    def evaluate_result(self):
-        return self._evaluate_result
+    def _append_result(self, key: TrainRecorderResultKey, epoch_results: list[EpochResult]):
+        for result in epoch_results:
+            prop_name = result["prop_name"]
+            results = self._result[key].get(prop_name)
+            if results is None:
+                self._result[key][prop_name] = [result]
+            else:
+                self._result[key][prop_name].append(result)
 
     def is_max_accuracy(self, epoch_results: list[EpochResult]):
         if self._max_accuracy_result is None:
@@ -52,7 +71,10 @@ class TrainRecorder:
         pearsonrs = map(lambda result: result["criteria"]["pearsonr"], epoch_results)
         accuracy = sum(pearsonrs)
 
-        max_accuracy_pearsonrs = map(lambda result: result["criteria"]["pearsonr"], self._max_accuracy_result.values())
+        max_accuracy_validate_result = self._max_accuracy_result["validate"]
+        max_accuracy_pearsonrs = map(
+            lambda result: result["criteria"]["pearsonr"], max_accuracy_validate_result.values()
+        )
         max_accuracy = sum(max_accuracy_pearsonrs)
 
         return accuracy > max_accuracy
@@ -60,24 +82,24 @@ class TrainRecorder:
     def next_epoch(self):
         self._current_epoch += 1
 
-    def append_result(self, kind: TrainRecorderResultKind, epoch_results: list[EpochResult]):
-        for result in epoch_results:
-            prop_name = result["prop_name"]
-            results = self._train_result.get(prop_name)
-            if results is None:
-                self._train_result[prop_name] = [result]
-            else:
-                self._train_result[prop_name].append(result)
+    def append_results(
+        self,
+        train_epoch_results: list[EpochResult],
+        validate_epoch_results: list[EpochResult],
+        evaluate_epoch_results: list[EpochResult],
+    ):
+        self._append_result(key="train", epoch_results=train_epoch_results)
+        self._append_result(key="validate", epoch_results=validate_epoch_results)
+        self._append_result(key="evaluate", epoch_results=evaluate_epoch_results)
 
-        if kind == "validate" and self.is_max_accuracy(epoch_results=epoch_results):
-            max_accuracy_result = {}
-            for result in epoch_results:
-                max_accuracy_result[result["prop_name"]] = result
-            self._max_accuracy_result = max_accuracy_result
+        if self.is_max_accuracy(epoch_results=validate_epoch_results):
+            self._set_max_accuracy_result(key="train", epoch_results=train_epoch_results)
+            self._set_max_accuracy_result(key="validate", epoch_results=validate_epoch_results)
+            self._set_max_accuracy_result(key="evaluate", epoch_results=evaluate_epoch_results)
             self._max_accuracy_epoch = self._current_epoch
 
     def to_continue(self):
         if self._max_accuracy_epoch is None:
             return True
 
-        return self._current_epoch - self._max_accuracy_epoch < 300
+        return self._current_epoch - self._max_accuracy_epoch < Env.continuous_epochs

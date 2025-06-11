@@ -3,12 +3,14 @@ import os
 from src.lib.config.dir import Dir
 from src.modules.extract.extractor.extractor import Extractor
 from src.modules.extract.language.esm.esm2 import ESM2Language
+from src.modules.extract.language.quick_esm.quick_esm2 import QuickESM2Language
 from src.modules.protein.protein_list import ProteinList
 
-deeplc_dataset_names = ["scx"]
+deeplc_dataset_names = ["plasma_lumos_1h"]
 
 # designate the language you want to use for extraction
-language = ESM2Language()
+# language = ESM2Language()
+language = QuickESM2Language()
 # set the language to extractor
 extractor = Extractor(language=language)
 
@@ -21,7 +23,7 @@ for i, dataset_name in enumerate(deeplc_dataset_names):
     extractor(protein_list=protein_list, batch_size=32)
 
     # save extracted features as HDF5 file named `data.h5`
-    experiment_dir = os.path.join(Dir.root_dir, "result", "EXT0001", dataset_name)
+    experiment_dir = os.path.join(Dir.root_dir, "result", "EXT0001q", dataset_name)
     os.makedirs(experiment_dir, exist_ok=True)
-    extracted_path = os.path.join(experiment_dir, "quick-data.h5")
+    extracted_path = os.path.join(experiment_dir, "data.h5")
     protein_list.save_as_hdf5(extracted_path)

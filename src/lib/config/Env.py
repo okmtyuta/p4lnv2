@@ -1,2 +1,2 @@
 class Env:
-    pass
+    continuous_epochs = 300

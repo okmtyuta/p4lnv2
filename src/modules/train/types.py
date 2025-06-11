@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import Literal, TypedDict
 
 import numpy as np
 import numpy.typing as npt
@@ -6,6 +6,9 @@ import torch
 
 from src.modules.protein.protein import ProteinProps
 from src.modules.protein.protein_list import ProteinProp
+
+
+TrainRecorderResultKey = Literal["train", "evaluate", "validate"]
 
 
 class Criteria(TypedDict):
@@ -27,6 +30,9 @@ class TrainResult(TypedDict):
     input_props: list[ProteinProps]
     output_props: list[ProteinProps]
     max_accuracy_epoch: list
-    max_accuracy_result: dict[ProteinProp, EpochResult]
-    train_result: dict[ProteinProp, list[EpochResult]]
-    evaluate_result: dict[ProteinProp, list[EpochResult]]
+    max_accuracy_result: dict[TrainRecorderResultKey, dict[ProteinProp, EpochResult]]
+    train_result: dict[TrainRecorderResultKey, dict[ProteinProp, list[EpochResult]]]
+
+
+TrainRecorderResult = dict[TrainRecorderResultKey, dict[ProteinProp, list[EpochResult]]]
+TrainRecorderMaxAccuracyResult = dict[TrainRecorderResultKey, dict[ProteinProp, EpochResult]]

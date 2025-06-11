@@ -2,13 +2,13 @@ import os
 
 from src.lib.config.dir import Dir
 from src.modules.extract.extractor.extractor import Extractor
-from src.modules.extract.language.esm.esm2 import ESM2Language
+from src.modules.extract.language.quick_esm.quick_esm2 import QuickESM2Language
 from src.modules.protein.protein_list import ProteinList
 
 deeplc_dataset_names = ["scx"]
 
 # designate the language you want to use for extraction
-language = ESM2Language()
+language = QuickESM2Language()
 # set the language to extractor
 extractor = Extractor(language=language)
 

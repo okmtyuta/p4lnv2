@@ -80,24 +80,23 @@ class Trainer:
         while self._recorder.to_continue():
             for i in range(10):
                 train_epoch_results = self._epoch_predict(dataloader=self._train_loader, backward=True)
-                self._recorder.append_result(kind="train", epoch_results=train_epoch_results)
-
                 validate_epoch_results = self._epoch_predict(dataloader=self._validate_loader)
-                self._recorder.append_result(kind="validate", epoch_results=validate_epoch_results)
-
                 evaluate_epoch_results = self._epoch_predict(dataloader=self._evaluate_loader)
 
-                for r in validate_epoch_results:
-                    ce = self._recorder._current_epoch
-                    print(f"Current epoch is {ce}, {r['prop_name']} pearson: {r['criteria']['pearsonr']}")
-                for r in evaluate_epoch_results:
-                    ce = self._recorder._current_epoch
-                    print(f"Current epoch is {ce}, ev {r['prop_name']} pearson: {r['criteria']['pearsonr']}")
-
-                mape = map(lambda r: r["criteria"]["pearsonr"], self._recorder.max_accuracy_result.values())
-                print(
-                    f"Max accuracy epoch is {self._recorder.max_accuracy_epoch}, {r['prop_name']} pearson: {list(mape)}"
+                self._recorder.append_results(
+                    train_epoch_results=train_epoch_results,
+                    validate_epoch_results=validate_epoch_results,
+                    evaluate_epoch_results=evaluate_epoch_results,
                 )
+
+                print(f"Current epoch is {self._recorder._current_epoch}")
+                for r in validate_epoch_results:
+                    print(f"Validate {r['prop_name']} pearson: {r['criteria']['pearsonr']}")
+                for r in evaluate_epoch_results:
+                    print(f"Evaluate {r['prop_name']} pearson: {r['criteria']['pearsonr']}")
+                for p, r in self._recorder.max_accuracy_result["evaluate"].items():
+                    v = self._recorder.max_accuracy_epoch
+                    print(f"Max {p} pearson: {r['criteria']['pearsonr']} at {v}")
 
                 self._recorder.next_epoch()
 
@@ -107,7 +106,10 @@ class Trainer:
             "output_props": self._dataloader.state.output_props,
             "max_accuracy_epoch": self._recorder.max_accuracy_epoch,
             "max_accuracy_result": self._recorder.max_accuracy_result,
-            "evaluate_result": self._recorder.evaluate_result,
-            "train_result": self._recorder.train_result,
+            "train_result": {
+                "train": self._recorder.train_result,
+                "validate": self._recorder.validate_result,
+                "evaluate": self._recorder.evaluate_result,
+            },
         }
         return train_result
